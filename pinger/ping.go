@@ -53,13 +53,13 @@ func ping(server_ip string, timeout int) (map[string]interface{}, error) {
 	host := h[0]
 	port, err := strconv.Atoi(h[1])
 	if err != nil {
-		return map[string]interface{}{"online": false}, err
+		return map[string]interface{}{"online": 0}, err
 	}
 	resp, err := status.Modern(ctx, host, uint16(port))
 	if err != nil {		
-		return map[string]interface{}{"online": false}, err
+		return map[string]interface{}{"online": 0}, err
 	}
 
 	
-	return map[string]interface{}{"online": true, "state": resp}, nil
+	return map[string]interface{}{"online": 1, "state": resp}, nil
 }
