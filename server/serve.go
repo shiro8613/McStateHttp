@@ -14,7 +14,7 @@ import (
 func Run(ctx context.Context) error {
 	conf := config.GetConfig()
 	r := gin.Default()
-	r.GET("/ping", handle)
+	r.GET("/ping/:server_name", handle)
 
 	srv := &http.Server {
 		Addr: conf.Bind,
@@ -41,9 +41,15 @@ func Run(ctx context.Context) error {
 }
 
 func handle(c *gin.Context) {
+	name := c.Param("server_name")
+
 	pinger.Mu.Lock()
-	state := pinger.States
+	state, ok := pinger.States[name]
 	pinger.Mu.Unlock()
+
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
+	}
 
 	c.AbortWithStatusJSON(http.StatusOK, state)
 }
