@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/McStateHttp/config"
+	"github.com/mcstatus-io/mcutil/v4/response"
 	"github.com/mcstatus-io/mcutil/v4/status"
 )
 
@@ -44,7 +45,7 @@ func pinger(conf config.Config) {
 	}
 }
 
-func ping(server_ip string, timeout int) (bool, error) {
+func ping(server_ip string, timeout int) (*response.StatusModern, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout) * time.Second)
 
 	defer cancel()
@@ -53,12 +54,13 @@ func ping(server_ip string, timeout int) (bool, error) {
 	host := h[0]
 	port, err := strconv.Atoi(h[1])
 	if err != nil {
-		return false, err
+		return nil, err
 	}
-	_, err = status.Modern(ctx, host, uint16(port))
+	resp, err := status.Modern(ctx, host, uint16(port))
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	return true, nil
+	
+	return resp, nil
 }

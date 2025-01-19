@@ -1,8 +1,12 @@
 package pinger
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/mcstatus-io/mcutil/v4/response"
+)
 
 var (
 	Mu     sync.Mutex
-	States map[string]bool = make(map[string]bool)
+	States map[string]*response.StatusModern = make(map[string]*response.StatusModern)
 )
